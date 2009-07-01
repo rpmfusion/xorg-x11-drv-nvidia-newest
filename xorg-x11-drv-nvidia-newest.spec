@@ -8,7 +8,7 @@
 
 Name:          xorg-x11-drv-nvidia-newest
 Version:       177.82
-Release:       1%{?dist}
+Release:       2%{?dist}
 Summary:       NVIDIA's proprietary display driver for NVIDIA graphic cards
 
 Group:         User Interface/X Hardware Support
@@ -253,6 +253,7 @@ fi ||:
 %dir %{nvidialibdir}
 %dir %{nvidialibdir}/tls
 %config %{_sysconfdir}/ld.so.conf.d/nvidia-%{_lib}.conf
+%{nvidialibdir}/libcuda.so
 %{nvidialibdir}/*.so.*
 %{nvidialibdir}/tls/*.so.*
 
@@ -264,10 +265,15 @@ fi ||:
 %{_includedir}/nvidia/GL/*.h
 %{_includedir}/nvidia/cuda/*.h
 %{nvidialibdir}/libXvMCNVIDIA.a
+%exclude %{nvidialibdir}/libcuda.so
 %{nvidialibdir}/*.so
 
 
 %changelog
+* Wed Jul  1 2009 kwizart < kwizart at gmail.com > - 177.82-2
+- Fix libcuda.so runtime usage - BZ 670#c4
+  Workaround for cudart.so wrong behaviour
+
 * Thu Nov 13 2008 kwizart < kwizart at gmail.com > - 177.82-1
 - Update to 177.82
 
