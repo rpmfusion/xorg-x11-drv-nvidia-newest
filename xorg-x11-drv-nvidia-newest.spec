@@ -7,8 +7,8 @@
 %endif
 
 Name:          xorg-x11-drv-nvidia-newest
-Version:       177.82
-Release:       2%{?dist}
+Version:       180.60
+Release:       1%{?dist}
 Summary:       NVIDIA's proprietary display driver for NVIDIA graphic cards
 
 Group:         User Interface/X Hardware Support
@@ -185,6 +185,12 @@ ln -s libnvidia-wfb.so.%{version} $RPM_BUILD_ROOT%{_libdir}/xorg/modules/extensi
 ln -s libcuda.so.%{version} $RPM_BUILD_ROOT%{nvidialibdir}/libcuda.so.1
 ln -s libcuda.so.%{version} $RPM_BUILD_ROOT%{nvidialibdir}/libcuda.so
 
+# This is 180.xx adds - vdpau libs and headers
+ln -s libvdpau_nvidia.so.%{version} $RPM_BUILD_ROOT%{nvidialibdir}/libvdpau_nvidia.so
+ln -s libvdpau.so.%{version} $RPM_BUILD_ROOT%{nvidialibdir}/libvdpau.so.1
+ln -s libvdpau.so.%{version} $RPM_BUILD_ROOT%{nvidialibdir}/libvdpau.so
+ln -s libvdpau_trace.so.%{version} $RPM_BUILD_ROOT%{nvidialibdir}/libvdpau_trace.so
+
 # X configuration script
 install -D -p -m 0755 %{SOURCE10} $RPM_BUILD_ROOT%{_sbindir}/nvidia-newest-config-display
 
@@ -254,6 +260,9 @@ fi ||:
 %dir %{nvidialibdir}/tls
 %config %{_sysconfdir}/ld.so.conf.d/nvidia-%{_lib}.conf
 %{nvidialibdir}/libcuda.so
+%{nvidialibdir}/libGLcore.so
+%{nvidialibdir}/libvdpau_nvidia.so
+%{nvidialibdir}/libvdpau_trace.so
 %{nvidialibdir}/*.so.*
 %{nvidialibdir}/tls/*.so.*
 
@@ -262,14 +271,21 @@ fi ||:
 %dir %{_includedir}/nvidia
 %dir %{_includedir}/nvidia/GL
 %dir %{_includedir}/nvidia/cuda
+%dir %{_includedir}/nvidia/vdpau
 %{_includedir}/nvidia/GL/*.h
 %{_includedir}/nvidia/cuda/*.h
-%{nvidialibdir}/libXvMCNVIDIA.a
+%{_includedir}/nvidia/vdpau/*.h
+%exclude %{nvidialibdir}/libXvMCNVIDIA.a
 %exclude %{nvidialibdir}/libcuda.so
-%{nvidialibdir}/*.so
+%{nvidialibdir}/libGL.so
+%{nvidialibdir}/libvdpau.so
+%{nvidialibdir}/libXvMCNVIDIA.so
 
 
 %changelog
+* Thu Jul 15 2009 kwizart < kwizart at gmail.com > - 180.60-1
+- Update to 180.60 to match cuda toolkit certified for F-9
+
 * Wed Jul  1 2009 kwizart < kwizart at gmail.com > - 177.82-2
 - Fix libcuda.so runtime usage - BZ 670#c4
   Workaround for cudart.so wrong behaviour
